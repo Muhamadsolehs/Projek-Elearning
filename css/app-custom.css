@@ -1,0 +1,123 @@
+/* ==========================================================================
+   SIM-PESANTREN TERINTEGRASI - ENTERPRISE DESIGN SYSTEM STYLES
+   Colors: Primary (#1E3A5F), Secondary (#2563EB), Accent (#D4A84B)
+   ========================================================================== */
+
+:root {
+  --color-primary: #1E3A5F;
+  --color-primary-dark: #142842;
+  --color-primary-light: #2C5282;
+  --color-secondary: #2563EB;
+  --color-accent: #D4A84B;
+  --color-accent-light: #F5E8C7;
+  --color-bg: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-text-main: #1E293B;
+  --color-text-muted: #64748B;
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-danger: #DC2626;
+  --color-info: #0284C7;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Print Styles for QR Code Labels (Format Kertas A4 Grid) */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area, .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .no-print {
+    display: none !important;
+  }
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+  .qr-label-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8mm !important;
+    page-break-inside: avoid;
+  }
+  .qr-label-card {
+    border: 1px dashed #64748B !important;
+    padding: 3mm !important;
+    text-align: center !important;
+    background: #FFF !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+  }
+}
+
+/* Scanner Laser Animation */
+@keyframes laser-sweep {
+  0% { top: 5%; opacity: 0.9; }
+  50% { top: 90%; opacity: 1; }
+  100% { top: 5%; opacity: 0.9; }
+}
+
+.scanner-laser {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #2563EB, #60A5FA, #2563EB, transparent);
+  box-shadow: 0 0 10px #3B82F6, 0 0 20px #60A5FA;
+  animation: laser-sweep 2.2s infinite ease-in-out;
+}
+
+/* Scanner Corner Markers */
+.scanner-corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: #D4A84B;
+}
+.scanner-corner-tl { top: 12px; left: 12px; border-top-width: 3px; border-left-width: 3px; }
+.scanner-corner-tr { top: 12px; right: 12px; border-top-width: 3px; border-right-width: 3px; }
+.scanner-corner-bl { bottom: 12px; left: 12px; border-bottom-width: 3px; border-left-width: 3px; }
+.scanner-corner-br { bottom: 12px; right: 12px; border-bottom-width: 3px; border-right-width: 3px; }
+
+/* Pulse Glow */
+.glow-accent {
+  box-shadow: 0 0 15px rgba(212, 168, 75, 0.35);
+}
+.glow-primary {
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.25);
+}
