@@ -3,19 +3,17 @@
 @section('title', 'Audit Log Aktivitas Sistem')
 
 @section('breadcrumb')
-<nav class="flex text-xs text-slate-500 font-medium mb-1">
-    <ol class="inline-flex items-center space-x-1">
-        <li class="inline-flex items-center"><a href="/dashboard" class="text-primary-600 hover:underline">SIM-Pesantren</a></li>
-        <li><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i></li>
-        <li class="inline-flex items-center text-slate-500">Pengaturan</li>
-        <li><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i></li>
-        <li class="text-slate-800 font-bold">Audit Log</li>
+<nav aria-label="breadcrumb" class="breadcrumb-header">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ route('dashboard.super-admin') }}">SIM Pesantren</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('dashboard.super-admin') }}">Pengaturan</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Audit Log</li>
     </ol>
 </nav>
 @endsection
 
 @section('page-title')
-Audit Log & Jejak Rekam Aktivitas Sistem
+Audit Log & Jejak Rekam Sistem
 @endsection
 
 @section('page-subtitle')
@@ -23,47 +21,70 @@ Rekam jejak setiap aksi krusial pengguna pada modul santri, nilai, keuangan, per
 @endsection
 
 @section('content')
-<div class="space-y-6">
-
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xs overflow-hidden">
-        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-            <h3 class="text-sm font-bold text-slate-900">Catatan Aktivitas Terbaru</h3>
-            <span class="text-xs font-semibold bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full">Real-time Stream</span>
+<section class="section">
+    <!-- Voler Datatable Card -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">Catatan Aktivitas Pengguna</h4>
+            <span class="badge bg-light-primary text-primary">{{ count($audit_logs) }} Log Tercatat</span>
         </div>
-
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse text-xs">
+        <div class="card-body">
+            <table class="table table-striped" id="tableLogs">
                 <thead>
-                    <tr class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100 uppercase tracking-wider">
-                        <th class="py-3 px-4">Waktu</th>
-                        <th class="py-3 px-4">Pengguna (User)</th>
-                        <th class="py-3 px-4">Peran (Role)</th>
-                        <th class="py-3 px-4">Modul</th>
-                        <th class="py-3 px-4">Aktivitas / Operasi</th>
-                        <th class="py-3 px-4">Alamat IP</th>
+                    <tr>
+                        <th>WAKTU</th>
+                        <th>PENGGUNA</th>
+                        <th>PERAN (ROLE)</th>
+                        <th>MODUL</th>
+                        <th>AKTIVITAS / OPERASI</th>
+                        <th>ALAMAT IP</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody>
                     @foreach($audit_logs as $log)
-                    <tr class="hover:bg-slate-50/60 transition-colors">
-                        <td class="py-3 px-4 text-slate-500 font-medium">{{ $log['time'] }}</td>
-                        <td class="py-3 px-4 font-bold text-slate-900">{{ $log['user'] }}</td>
-                        <td class="py-3 px-4">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-800">
-                                {{ $log['role'] }}
-                            </span>
+                    <tr>
+                        <td class="text-muted"><small>{{ $log['time'] }}</small></td>
+                        <td>
+                            <div class="fw-bold text-dark">{{ $log['user'] }}</div>
                         </td>
-                        <td class="py-3 px-4">
-                            <span class="font-semibold text-primary-700">{{ $log['module'] }}</span>
+                        <td>
+                            <span class="badge bg-light text-dark">{{ $log['role'] }}</span>
                         </td>
-                        <td class="py-3 px-4 font-medium text-slate-800">{{ $log['action'] }}</td>
-                        <td class="py-3 px-4 font-mono text-slate-400">{{ $log['ip'] }}</td>
+                        <td>
+                            <span class="badge bg-light-info text-info">{{ $log['module'] }}</span>
+                        </td>
+                        <td class="text-dark">{{ $log['action'] }}</td>
+                        <td><small class="font-monospace text-muted">{{ $log['ip'] }}</small></td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </div>
-
-</div>
+</section>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let table = document.querySelector('#tableLogs');
+        if (table && typeof simpleDatatables !== 'undefined') {
+            new simpleDatatables.DataTable(table, {
+                searchable: true,
+                fixedHeight: false,
+                perPage: 10,
+                perPageSelect: [10, 20, 50],
+                labels: {
+                    placeholder: "Cari pengguna, modul, aksi...",
+                    perPage: "{select} entri per halaman",
+                    noRows: "Tidak ada log aktivitas ditemukan",
+                    info: "Menampilkan {start} sampai {end} dari {rows} log"
+                }
+            });
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        }
+    });
+</script>
+@endpush

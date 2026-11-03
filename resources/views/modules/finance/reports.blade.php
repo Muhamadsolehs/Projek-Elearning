@@ -2,57 +2,134 @@
 
 @section('title', 'Laporan Keuangan & Arus Kas')
 
-@section('breadcrumb')
-<nav class="flex text-xs text-slate-500 font-medium mb-1">
-    <ol class="inline-flex items-center space-x-1">
-        <li class="inline-flex items-center"><a href="/dashboard" class="text-primary-600 hover:underline">SIM-Pesantren</a></li>
-        <li><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i></li>
-        <li class="inline-flex items-center"><a href="/dashboard/keuangan" class="text-primary-600 hover:underline">Keuangan</a></li>
-        <li><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i></li>
-        <li class="text-slate-800 font-bold">Laporan Kas</li>
-    </ol>
-</nav>
-@endsection
-
 @section('page-title')
 Laporan Arus Kas & Rekapitulasi SPP
 @endsection
 
 @section('page-subtitle')
-Ringkasan penerimaan kas pesantren, realisasi target pendapatan, dan rekap tunggakan santri.
+Ringkasan penerimaan kas pesantren, realisasi target pendapatan, dan rekap mutasi pembayaran santri.
 @endsection
 
 @section('page-actions')
 <button type="button" 
-        @click="$store.sim.addToast('Laporan Diekspor', 'Laporan keuangan berhasil diekspor ke PDF.', 'success')" 
-        class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-sm flex items-center gap-1.5 transition-all">
-    <i data-lucide="download" class="w-4 h-4"></i>
-    <span>Unduh Laporan Keuangan (PDF)</span>
+        onclick="window.print()" 
+        class="btn btn-outline-success d-inline-flex align-items-center gap-2">
+    <i data-feather="printer" style="width: 16px; height: 16px;"></i>
+    <span>Cetak Laporan / PDF</span>
 </button>
 @endsection
 
 @section('content')
-<div class="space-y-6">
-
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
-            <span class="text-xs font-bold text-slate-500 uppercase block">Total Penerimaan Kas</span>
-            <span class="text-2xl font-black text-emerald-700 mt-1 block">Rp 184.500.000</span>
-            <span class="text-[11px] text-slate-400">Semester Ganjil 2026/2027</span>
+<section class="section">
+    <!-- STATISTIK KAS -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase mb-2 font-semibold" style="font-size: 0.75rem; letter-spacing: 0.5px;">Total Penerimaan Kas</h6>
+                    <h3 class="fw-bold text-success mb-1">Rp 184.500.000</h3>
+                    <small class="text-muted">Semester Ganjil T.A 2026/2027</small>
+                </div>
+            </div>
         </div>
-
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
-            <span class="text-xs font-bold text-slate-500 uppercase block">Penerimaan Tunai Loket</span>
-            <span class="text-2xl font-black text-primary-900 mt-1 block">Rp 48.250.000</span>
-            <span class="text-[11px] text-slate-400">Pembayaran Langsung</span>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase mb-2 font-semibold" style="font-size: 0.75rem; letter-spacing: 0.5px;">Penerimaan Tunai Loket</h6>
+                    <h3 class="fw-bold text-primary mb-1">Rp 48.250.000</h3>
+                    <small class="text-muted">Kasir Loket Bendahara Langsung</small>
+                </div>
+            </div>
         </div>
-
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
-            <span class="text-xs font-bold text-slate-500 uppercase block">Penerimaan Transfer Bank</span>
-            <span class="text-2xl font-black text-blue-700 mt-1 block">Rp 136.250.000</span>
-            <span class="text-[11px] text-slate-400">BSI & Bank Muamalat</span>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase mb-2 font-semibold" style="font-size: 0.75rem; letter-spacing: 0.5px;">Penerimaan Transfer Bank</h6>
+                    <h3 class="fw-bold text-info mb-1">Rp 136.250.000</h3>
+                    <small class="text-muted">Bank Syariah Indonesia (BSI) & Muamalat</small>
+                </div>
+            </div>
         </div>
     </div>
 
-</div>
+    <!-- TABEL REKAPITULASI BUKU KAS -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="card-title mb-0">Buku Kas & Jurnal Mutasi Penerimaan</h4>
+                <p class="text-muted text-sm mb-0">Rekapitulasi seluruh riwayat transaksi pembayaran dan tagihan santri.</p>
+            </div>
+            <span class="badge bg-light-primary text-primary">{{ count($bills) }} Transaksi</span>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped" id="tableReports">
+                <thead>
+                    <tr>
+                        <th>NO. TRANSAKSI</th>
+                        <th>NAMA SANTRI & KELAS</th>
+                        <th>POS PEMBAYARAN</th>
+                        <th>METODE BAYAR</th>
+                        <th>TANGGAL BAYAR</th>
+                        <th>NOMINAL</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($bills as $b)
+                    <tr>
+                        <td><span class="badge bg-light text-dark font-monospace fw-bold">{{ $b['id'] }}</span></td>
+                        <td>
+                            <div class="fw-bold text-dark">{{ $b['student_name'] }}</div>
+                            <small class="text-muted">NIS: {{ $b['student_nis'] }} • {{ $b['student_class'] }}</small>
+                        </td>
+                        <td>{{ $b['title'] }}</td>
+                        <td>
+                            <span class="text-dark">{{ $b['payment_method'] ?? 'Menunggu Pembayaran' }}</span>
+                        </td>
+                        <td>
+                            {{ $b['paid_date'] ?? 'Belum Lunas' }}
+                        </td>
+                        <td>
+                            <span class="fw-bold text-success">{{ $b['formatted_amount'] }}</span>
+                        </td>
+                        <td>
+                            @php
+                                $statusBadge = match($b['status']) {
+                                    'Lunas' => 'bg-success',
+                                    'Menunggu Verifikasi' => 'bg-warning',
+                                    'Terlambat' => 'bg-danger',
+                                    default => 'bg-secondary'
+                                };
+                            @endphp
+                            <span class="badge {{ $statusBadge }}">{{ $b['status'] }}</span>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let table = document.querySelector('#tableReports');
+        if (table && typeof simpleDatatables !== 'undefined') {
+            new simpleDatatables.DataTable(table, {
+                searchable: true,
+                fixedHeight: false,
+                perPage: 10,
+                perPageSelect: [5, 10, 20, 50],
+                labels: {
+                    placeholder: "Cari transaksi, santri, metode bayar...",
+                    perPage: "{select} entri per halaman",
+                    noRows: "Tidak ada riwayat kas ditemukan",
+                    info: "Menampilkan {start} sampai {end} dari {rows} data kas"
+                }
+            });
+        }
+    });
+</script>
+@endpush

@@ -2,18 +2,6 @@
 
 @section('title', 'Jadwal Pelajaran Formal')
 
-@section('breadcrumb')
-<nav class="flex text-xs text-slate-500 font-medium mb-1">
-    <ol class="inline-flex items-center space-x-1">
-        <li class="inline-flex items-center"><a href="/dashboard" class="text-primary-600 hover:underline">SIM-Pesantren</a></li>
-        <li><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i></li>
-        <li class="inline-flex items-center"><a href="/dashboard/akademik" class="text-primary-600 hover:underline">Akademik</a></li>
-        <li><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i></li>
-        <li class="text-slate-800 font-bold">Jadwal Pelajaran</li>
-    </ol>
-</nav>
-@endsection
-
 @section('page-title')
 Matriks Jadwal Pelajaran Mingguan
 @endsection
@@ -22,87 +10,182 @@ Matriks Jadwal Pelajaran Mingguan
 Jadwal kegiatan belajar mengajar (KBM) pendidikan formal pesantren semester ganjil T.A 2026/2027.
 @endsection
 
-@section('content')
-<div class="space-y-6" x-data="{ selectedDay: 'Senin', selectedClass: 'Kelas VII-A (Putra)' }">
-
-    <!-- SELECTOR KELAS & HARI -->
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-slate-600">Pilih Kelas:</span>
-            <select x-model="selectedClass" class="py-1.5 px-3 border border-slate-200 rounded-lg text-xs font-bold bg-slate-50">
-                <option value="Kelas VII-A (Putra)">Kelas VII-A (Putra)</option>
-                <option value="Kelas VII-B (Putri)">Kelas VII-B (Putri)</option>
-                <option value="Kelas VIII-A (Putra)">Kelas VIII-A (Putra)</option>
-                <option value="Kelas X-MIPA (Putra)">Kelas X-MIPA (Putra)</option>
-            </select>
-        </div>
-
-        <div class="inline-flex p-1 bg-slate-100 rounded-xl gap-1 text-xs font-bold overflow-x-auto">
-            <template x-for="day in ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Sabtu', 'Ahad']" :key="day">
-                <button type="button" 
-                        @click="selectedDay = day"
-                        class="px-3 py-1.5 rounded-lg transition-all"
-                        :class="selectedDay === day ? 'bg-white text-primary-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'"
-                        x-text="day">
-                </button>
-            </template>
-        </div>
-    </div>
-
-    <!-- JADWAL SESI MATRIKS CARD -->
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xs p-6 space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-            <h3 class="text-sm font-bold text-slate-900" x-text="'Jadwal Hari ' + selectedDay + ' • ' + selectedClass"></h3>
-            <span class="text-xs font-semibold bg-emerald-50 text-emerald-800 px-2.5 py-0.5 rounded-full">Aktif Berjalan</span>
-        </div>
-
-        <div class="space-y-3">
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-xl bg-primary-800 text-accent font-bold font-mono text-center min-w-[90px]">
-                        07:30 - 09:00
-                    </div>
-                    <div>
-                        <span class="text-sm font-extrabold text-slate-900 block">Fiqih & Ushul Fiqih</span>
-                        <span class="text-slate-500">Pengampu: Ust. Ahmad Fauzi, S.Pd.I • Ruang Kls 101</span>
-                    </div>
-                </div>
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 self-start sm:self-center">
-                    Sesi 1 (2 JP)
-                </span>
-            </div>
-
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-xl bg-primary-800 text-accent font-bold font-mono text-center min-w-[90px]">
-                        09:15 - 10:45
-                    </div>
-                    <div>
-                        <span class="text-sm font-extrabold text-slate-900 block">Bahasa Arab & Nahwu</span>
-                        <span class="text-slate-500">Pengampu: Usth. Siti Maryam, S.Pd • Ruang Kls 101</span>
-                    </div>
-                </div>
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 self-start sm:self-center">
-                    Sesi 2 (2 JP)
-                </span>
-            </div>
-
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                <div class="flex items-center gap-3">
-                    <div class="p-2.5 rounded-xl bg-primary-800 text-accent font-bold font-mono text-center min-w-[90px]">
-                        11:00 - 12:15
-                    </div>
-                    <div>
-                        <span class="text-sm font-extrabold text-slate-900 block">Matematika Umum</span>
-                        <span class="text-slate-500">Pengampu: Ust. Drs. H. Mulyadi • Ruang Kls 101</span>
-                    </div>
-                </div>
-                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800 self-start sm:self-center">
-                    Sesi 3 (2 JP)
-                </span>
-            </div>
-        </div>
-    </div>
-
-</div>
+@section('page-actions')
+<button type="button" class="btn btn-primary d-inline-flex align-items-center gap-2">
+    <i data-feather="plus" style="width: 16px; height: 16px;"></i>
+    <span>Tambah Jadwal Sesi</span>
+</button>
 @endsection
+
+@section('content')
+<section class="section">
+    <!-- SELECTOR KELAS & HARI -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <label class="form-label fw-bold text-muted small">PILIH KELAS / ROMBEL</label>
+                    <select class="form-select" id="selectClass">
+                        @foreach($classes as $c)
+                        <option value="{{ $c['id'] }}">{{ $c['name'] }} (Wali: {{ $c['homeroom'] ?? '-' }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label fw-bold text-muted small">PILIH HARI PEMBELAJARAN</label>
+                    <div class="btn-group w-100 flex-wrap" role="group">
+                        <input type="radio" class="btn-check" name="dayRadio" id="daySenin" checked>
+                        <label class="btn btn-outline-primary" for="daySenin">Senin</label>
+
+                        <input type="radio" class="btn-check" name="dayRadio" id="daySelasa">
+                        <label class="btn btn-outline-primary" for="daySelasa">Selasa</label>
+
+                        <input type="radio" class="btn-check" name="dayRadio" id="dayRabu">
+                        <label class="btn btn-outline-primary" for="dayRabu">Rabu</label>
+
+                        <input type="radio" class="btn-check" name="dayRadio" id="dayKamis">
+                        <label class="btn btn-outline-primary" for="dayKamis">Kamis</label>
+
+                        <input type="radio" class="btn-check" name="dayRadio" id="daySabtu">
+                        <label class="btn btn-outline-primary" for="daySabtu">Sabtu</label>
+
+                        <input type="radio" class="btn-check" name="dayRadio" id="dayAhad">
+                        <label class="btn btn-outline-primary" for="dayAhad">Ahad</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABEL JADWAL SESI MATRIKS CARD -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="card-title mb-0">Jadwal Sesi Pembelajaran Aktif</h4>
+                <small class="text-muted">Jadwal harian berdasarkan jam pelajaran formal di madrasah.</small>
+            </div>
+            <span class="badge bg-light-success text-success">Semester Ganjil 2026/2027</span>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped" id="tableSchedules">
+                <thead>
+                    <tr>
+                        <th>JAM / WAKTU</th>
+                        <th>SESI</th>
+                        <th>MATA PELAJARAN</th>
+                        <th>USTADZ / GURU PENGAMPU</th>
+                        <th>RUANG KELAS</th>
+                        <th>STATUS</th>
+                        <th class="text-center">AKSI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge bg-primary font-monospace py-2 px-3">07:30 - 09:00</span></td>
+                        <td><span class="badge bg-light-primary text-primary">Sesi 1 (2 JP)</span></td>
+                        <td>
+                            <div class="fw-bold text-dark">Fiqih & Ushul Fiqih</div>
+                            <small class="text-muted">Kurikulum Diniyah Terpadu</small>
+                        </td>
+                        <td>
+                            <div class="text-dark fw-semibold">Ust. Ahmad Fauzi, S.Pd.I</div>
+                            <small class="text-muted">NIP: 198504122010011002</small>
+                        </td>
+                        <td><span class="badge bg-light text-dark">Gedung A • R.101</span></td>
+                        <td><span class="badge bg-success">Berjalan</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-secondary py-1 px-2">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg-primary font-monospace py-2 px-3">09:15 - 10:45</span></td>
+                        <td><span class="badge bg-light-info text-info">Sesi 2 (2 JP)</span></td>
+                        <td>
+                            <div class="fw-bold text-dark">Bahasa Arab & Nahwu Sharaf</div>
+                            <small class="text-muted">Kurikulum Pesantren</small>
+                        </td>
+                        <td>
+                            <div class="text-dark fw-semibold">Usth. Siti Maryam, S.Pd</div>
+                            <small class="text-muted">NIP: 199008252014022001</small>
+                        </td>
+                        <td><span class="badge bg-light text-dark">Gedung A • R.101</span></td>
+                        <td><span class="badge bg-success">Berjalan</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-secondary py-1 px-2">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg-primary font-monospace py-2 px-3">11:00 - 12:15</span></td>
+                        <td><span class="badge bg-light-purple text-purple" style="color: #6f42c1; background-color: #f3e8ff;">Sesi 3 (2 JP)</span></td>
+                        <td>
+                            <div class="fw-bold text-dark">Matematika Umum</div>
+                            <small class="text-muted">Kurikulum Nasional (Kemendikbud)</small>
+                        </td>
+                        <td>
+                            <div class="text-dark fw-semibold">Ust. Drs. H. Mulyadi</div>
+                            <small class="text-muted">NIP: 197802142005011003</small>
+                        </td>
+                        <td><span class="badge bg-light text-dark">Gedung A • R.101</span></td>
+                        <td><span class="badge bg-success">Berjalan</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-secondary py-1 px-2">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg-secondary font-monospace py-2 px-3">12:15 - 13:30</span></td>
+                        <td><span class="badge bg-light-warning text-warning">Istirahat</span></td>
+                        <td>
+                            <div class="fw-bold text-dark">Shalat Zhuhur Berjamaah & Makan Siang</div>
+                            <small class="text-muted">Masjid & Ruang Makan Asrama</small>
+                        </td>
+                        <td>
+                            <div class="text-muted">Tim Pembina Asrama</div>
+                        </td>
+                        <td><span class="badge bg-light text-dark">Masjid Jami'</span></td>
+                        <td><span class="badge bg-secondary">Jeda</span></td>
+                        <td class="text-center">-</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg-primary font-monospace py-2 px-3">13:30 - 15:00</span></td>
+                        <td><span class="badge bg-light-success text-success">Sesi 4 (2 JP)</span></td>
+                        <td>
+                            <div class="fw-bold text-dark">Al-Qur'an & Tajwid Praktis</div>
+                            <small class="text-muted">Tahsin & Qira'ah</small>
+                        </td>
+                        <td>
+                            <div class="text-dark fw-semibold">Ust. Ridwan Hakim, M.Pd</div>
+                            <small class="text-muted">NIP: 198811032012011005</small>
+                        </td>
+                        <td><span class="badge bg-light text-dark">Gedung A • R.101</span></td>
+                        <td><span class="badge bg-success">Berjalan</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-secondary py-1 px-2">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+@endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let table = document.querySelector('#tableSchedules');
+        if (table && typeof simpleDatatables !== 'undefined') {
+            new simpleDatatables.DataTable(table, {
+                searchable: true,
+                fixedHeight: false,
+                perPage: 10,
+                labels: {
+                    placeholder: "Cari jadwal, mapel, guru...",
+                    perPage: "{select} entri per halaman",
+                    noRows: "Tidak ada jadwal ditemukan",
+                    info: "Menampilkan {start} sampai {end} dari {rows} jadwal"
+                }
+            });
+        }
+    });
+</script>
+@endpush

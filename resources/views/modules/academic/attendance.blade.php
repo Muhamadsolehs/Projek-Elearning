@@ -1,152 +1,163 @@
 @extends('layouts.app')
 
-@section('title', 'Presensi Kelas Formal')
+@section('title', 'Presensi / Absensi Kelas')
 
 @section('breadcrumb')
-<nav class="flex text-xs text-slate-500 font-medium mb-1">
-    <ol class="inline-flex items-center space-x-1">
-        <li class="inline-flex items-center"><a href="/dashboard" class="text-primary-600 hover:underline">SIM-Pesantren</a></li>
-        <li><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i></li>
-        <li class="inline-flex items-center"><a href="/dashboard/akademik" class="text-primary-600 hover:underline">Akademik</a></li>
-        <li><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i></li>
-        <li class="text-slate-800 font-bold">Presensi Formal</li>
+<nav aria-label="breadcrumb" class="breadcrumb-header">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ route('dashboard.super-admin') }}">SIM Pesantren</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('dashboard.akademik') }}">Akademik</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Presensi Kelas</li>
     </ol>
 </nav>
 @endsection
 
 @section('page-title')
-Input & Rekapitulasi Presensi Santri Formal
+Input & Rekap Presensi Kelas
 @endsection
 
 @section('page-subtitle')
-Presensi harian pendidikan formal per jam pelajaran dan rombongan belajar.
+Catat kehadiran santri per mata pelajaran dengan status Hadir, Izin, Sakit, atau Alfa.
 @endsection
 
 @section('page-actions')
-<div class="flex items-center gap-2">
-    <button type="button" 
-            @click="markAll('Hadir')"
-            class="px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold rounded-lg shadow-2xs">
-        Tandai Semua Hadir
+<div class="d-flex align-items-center gap-2">
+    <button type="button" onclick="markAllPresent()" class="btn btn-sm btn-outline-success d-flex align-items-center gap-1">
+        <i data-feather="check-all" style="width: 14px; height: 14px;"></i> Tandai Semua Hadir
     </button>
-    <button type="button" 
-            @click="saveAttendance()"
-            class="px-4 py-2 bg-primary-800 hover:bg-primary-900 text-white text-xs font-bold rounded-lg shadow-sm flex items-center gap-1.5 transition-all">
-        <i data-lucide="save" class="w-4 h-4"></i>
-        <span>Simpan Presensi</span>
+    <button type="button" onclick="saveAttendance()" class="btn btn-sm btn-primary d-flex align-items-center gap-1">
+        <i data-feather="save" style="width: 14px; height: 14px;"></i> Simpan Presensi
     </button>
 </div>
 @endsection
 
 @section('content')
-<div class="space-y-6" x-data="{
-    selectedClass: 'Kelas VII-A (Putra)',
-    attendanceDate: '2026-11-02',
-    subject: 'Fiqih & Ushul Fiqih',
-    
-    get classStudents() {
-        return $store.sim.students.filter(s => s.class.includes(this.selectedClass) || s.class.includes('VII-A')).slice(0, 20);
-    },
-
-    markAll(status) {
-        this.classStudents.forEach(s => s.attendanceStatus = status);
-        $store.sim.addToast('Presensi Diperbarui', `Seluruh santri kelas ditandai: ${status}`, 'info');
-    },
-
-    saveAttendance() {
-        $store.sim.addToast('Presensi Berhasil Disimpan', `Presensi kelas ${this.selectedClass} mapel ${this.subject} tanggal ${this.attendanceDate} berhasil disimpan.`, 'success');
-    }
-}">
-
-    <!-- SELECTOR BAR -->
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div>
-                <label class="block font-semibold text-slate-700 mb-1">Pilih Kelas / Rombel</label>
-                <select x-model="selectedClass" class="w-full py-2 px-3 border border-slate-200 rounded-xl bg-slate-50 font-bold">
-                    <option value="Kelas VII-A (Putra)">Kelas VII-A (Putra)</option>
-                    <option value="Kelas VII-B (Putri)">Kelas VII-B (Putri)</option>
-                    <option value="Kelas VIII-A (Putra)">Kelas VIII-A (Putra)</option>
-                    <option value="Kelas VIII-B (Putri)">Kelas VIII-B (Putri)</option>
-                    <option value="Kelas IX-A (Putra)">Kelas IX-A (Putra)</option>
-                    <option value="Kelas X-MIPA (Putra)">Kelas X-MIPA (Putra)</option>
-                </select>
-            </div>
-
-            <div>
-                <label class="block font-semibold text-slate-700 mb-1">Mata Pelajaran</label>
-                <select x-model="subject" class="w-full py-2 px-3 border border-slate-200 rounded-xl bg-slate-50 font-bold">
-                    <option value="Fiqih & Ushul Fiqih">Fiqih & Ushul Fiqih</option>
-                    <option value="Bahasa Arab & Nahwu">Bahasa Arab & Nahwu</option>
-                    <option value="Tahfidz Al-Quran">Tahfidz Al-Quran</option>
-                    <option value="Matematika Umum">Matematika Umum</option>
-                </select>
-            </div>
-
-            <div>
-                <label class="block font-semibold text-slate-700 mb-1">Tanggal Pertemuan</label>
-                <input type="date" x-model="attendanceDate" class="w-full py-2 px-3 border border-slate-200 rounded-xl bg-slate-50 font-bold">
+<section class="section">
+    <!-- Filter Bar Card -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-center">
+                <div class="col-12 col-md-4">
+                    <label class="form-label text-xs fw-bold text-muted text-uppercase mb-1">Pilih Kelas</label>
+                    <select id="selectClass" class="form-select form-select-sm" onchange="filterClass(this.value)">
+                        <option value="">Semua Kelas</option>
+                        @foreach($classes as $c)
+                            <option value="{{ $c['name'] }}">{{ $c['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-12 col-md-4">
+                    <label class="form-label text-xs fw-bold text-muted text-uppercase mb-1">Mata Pelajaran</label>
+                    <select class="form-select form-select-sm">
+                        <option value="Fiqih & Ushul Fiqih">Fiqih & Ushul Fiqih</option>
+                        <option value="Bahasa Arab & Nahwu">Bahasa Arab & Nahwu</option>
+                        <option value="Tahfidz Al-Quran">Tahfidz Al-Quran</option>
+                        <option value="Matematika Umum">Matematika Umum</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-4">
+                    <label class="form-label text-xs fw-bold text-muted text-uppercase mb-1">Tanggal KBM</label>
+                    <input type="date" class="form-control form-control-sm" value="{{ date('Y-m-d') }}">
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- TABLE INPUT PRESENSI -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse text-xs">
+    <!-- Voler Table Card -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">Daftar Kehadiran Santri</h4>
+            <span class="badge bg-light-primary text-primary">{{ count($students) }} Total Santri</span>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped" id="tableAttendance">
                 <thead>
-                    <tr class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100 uppercase tracking-wider">
-                        <th class="py-3 px-4">No.</th>
-                        <th class="py-3 px-4">Santri</th>
-                        <th class="py-3 px-4">NIS</th>
-                        <th class="py-3 px-4 text-center">Status Kehadiran</th>
+                    <tr>
+                        <th style="width: 50px;">NO</th>
+                        <th>FOTO & NAMA SANTRI</th>
+                        <th>NIS</th>
+                        <th>KELAS</th>
+                        <th class="text-center" style="width: 280px;">STATUS KEHADIRAN</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
-                    <template x-for="(st, index) in classStudents" :key="st.id">
-                        <tr class="hover:bg-slate-50/60 transition-colors">
-                            <td class="py-3 px-4 text-slate-400 font-mono" x-text="index + 1"></td>
-                            <td class="py-3 px-4">
-                                <div class="flex items-center gap-2.5">
-                                    <img :src="st.avatar" class="w-7 h-7 rounded-full bg-slate-100 border" alt="">
-                                    <span class="font-bold text-slate-900" x-text="st.name"></span>
+                <tbody>
+                    @foreach($students as $index => $s)
+                    <tr class="attendance-row" data-class="{{ $s['class'] }}">
+                        <td class="text-muted font-monospace">{{ $index + 1 }}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="avatar me-2">
+                                    <img src="{{ asset($s['avatar']) }}" alt="Avatar" class="rounded-circle border" style="width: 32px; height: 32px; object-fit: cover;">
                                 </div>
-                            </td>
-                            <td class="py-3 px-4 font-mono font-medium text-slate-600" x-text="st.nis"></td>
-                            <td class="py-3 px-4 text-center">
-                                <div class="inline-flex rounded-xl p-1 bg-slate-100 gap-1 text-[11px] font-bold">
-                                    <button type="button" 
-                                            @click="st.attendanceStatus = 'Hadir'"
-                                            class="px-3 py-1 rounded-lg transition-all"
-                                            :class="(!st.attendanceStatus || st.attendanceStatus === 'Hadir') ? 'bg-emerald-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'">
-                                        Hadir
-                                    </button>
-                                    <button type="button" 
-                                            @click="st.attendanceStatus = 'Izin'"
-                                            class="px-3 py-1 rounded-lg transition-all"
-                                            :class="st.attendanceStatus === 'Izin' ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'">
-                                        Izin
-                                    </button>
-                                    <button type="button" 
-                                            @click="st.attendanceStatus = 'Sakit'"
-                                            class="px-3 py-1 rounded-lg transition-all"
-                                            :class="st.attendanceStatus === 'Sakit' ? 'bg-amber-500 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'">
-                                        Sakit
-                                    </button>
-                                    <button type="button" 
-                                            @click="st.attendanceStatus = 'Alfa'"
-                                            class="px-3 py-1 rounded-lg transition-all"
-                                            :class="st.attendanceStatus === 'Alfa' ? 'bg-red-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'">
-                                        Alfa
-                                    </button>
+                                <div>
+                                    <span class="fw-bold text-dark d-block">{{ $s['name'] }}</span>
+                                    <small class="text-muted">{{ $s['gender'] === 'L' ? 'Putra' : 'Putri' }}</small>
                                 </div>
-                            </td>
-                        </tr>
-                    </template>
+                            </div>
+                        </td>
+                        <td><span class="badge bg-light text-dark font-monospace">{{ $s['nis'] }}</span></td>
+                        <td><span class="badge bg-light-info text-info">{{ $s['class'] }}</span></td>
+                        <td class="text-center">
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Status Kehadiran">
+                                <input type="radio" class="btn-check status-btn status-hadir" name="status_{{ $s['id'] }}" id="h_{{ $s['id'] }}" value="Hadir" checked>
+                                <label class="btn btn-outline-success" for="h_{{ $s['id'] }}">Hadir</label>
+
+                                <input type="radio" class="btn-check status-btn" name="status_{{ $s['id'] }}" id="i_{{ $s['id'] }}" value="Izin">
+                                <label class="btn btn-outline-info" for="i_{{ $s['id'] }}">Izin</label>
+
+                                <input type="radio" class="btn-check status-btn" name="status_{{ $s['id'] }}" id="s_{{ $s['id'] }}" value="Sakit">
+                                <label class="btn btn-outline-warning" for="s_{{ $s['id'] }}">Sakit</label>
+
+                                <input type="radio" class="btn-check status-btn" name="status_{{ $s['id'] }}" id="a_{{ $s['id'] }}" value="Alfa">
+                                <label class="btn btn-outline-danger" for="a_{{ $s['id'] }}">Alfa</label>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
-
-</div>
+</section>
 @endsection
+
+@push('scripts')
+<script>
+    let dataTable;
+    document.addEventListener('DOMContentLoaded', function () {
+        let table = document.querySelector('#tableAttendance');
+        if (table && typeof simpleDatatables !== 'undefined') {
+            dataTable = new simpleDatatables.DataTable(table, {
+                searchable: true,
+                fixedHeight: false,
+                perPage: 15,
+                perPageSelect: [10, 15, 25, 50, 100],
+                labels: {
+                    placeholder: "Cari nama santri, NIS, kelas...",
+                    perPage: "{select} entri per halaman",
+                    noRows: "Tidak ada data santri ditemukan",
+                    info: "Menampilkan {start} sampai {end} dari {rows} santri"
+                }
+            });
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        }
+    });
+
+    function markAllPresent() {
+        document.querySelectorAll('.status-hadir').forEach(el => el.checked = true);
+        alert('Seluruh santri berhasil ditandai HADIR.');
+    }
+
+    function saveAttendance() {
+        alert('Data presensi KBM berhasil disimpan ke sistem.');
+    }
+
+    function filterClass(val) {
+        if (dataTable) {
+            dataTable.search(val);
+        }
+    }
+</script>
+@endpush

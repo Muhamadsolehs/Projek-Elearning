@@ -1,107 +1,145 @@
 @extends('layouts.app')
 
-@section('title', 'Rekapitulasi Nilai & Rapor')
+@section('title', 'Rekap Nilai Siswa')
 
 @section('breadcrumb')
-<nav class="flex text-xs text-slate-500 font-medium mb-1">
-    <ol class="inline-flex items-center space-x-1">
-        <li class="inline-flex items-center"><a href="/dashboard" class="text-primary-600 hover:underline">SIM-Pesantren</a></li>
-        <li><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i></li>
-        <li class="inline-flex items-center"><a href="/dashboard/akademik" class="text-primary-600 hover:underline">Akademik</a></li>
-        <li><i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i></li>
-        <li class="text-slate-800 font-bold">Nilai & Rapor</li>
+<nav aria-label="breadcrumb" class="breadcrumb-header">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ route('dashboard.super-admin') }}">SIM Pesantren</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('dashboard.akademik') }}">Akademik</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Rekap Nilai Siswa</li>
     </ol>
 </nav>
 @endsection
 
 @section('page-title')
-Leger Nilai & Penilaian Rapor Santri
+Leger & Rekap Nilai Akademik
 @endsection
 
 @section('page-subtitle')
-Input dan rekap nilai Tugas, Ulangan Harian (UH), Penilaian Tengah Semester (PTS), dan Akhir Semester (PAS).
+Kelola nilai formatif harian, tugas, PTS, dan PAS santri per rombel dan mata pelajaran.
 @endsection
 
 @section('page-actions')
-<button type="button" 
-        @click="$store.sim.addToast('Cetak Leger Sukses', 'Leger nilai kelas berhasil digenerate dalam format PDF siap cetak.', 'success')" 
-        class="px-3.5 py-2 bg-primary-800 hover:bg-primary-900 text-white text-xs font-bold rounded-lg shadow-sm flex items-center gap-1.5 transition-all">
-    <i data-lucide="printer" class="w-4 h-4 text-accent"></i>
-    <span>Cetak Leger Nilai</span>
-</button>
+<div class="d-flex align-items-center gap-2">
+    <button type="button" onclick="alert('Data nilai berhasil disimpan ke rapor!')" class="btn btn-sm btn-primary d-flex align-items-center gap-1">
+        <i data-feather="save" style="width: 14px; height: 14px;"></i> Simpan Nilai
+    </button>
+</div>
 @endsection
 
 @section('content')
-<div class="space-y-6" x-data="{
-    selectedClass: 'Kelas VII-A (Putra)',
-    selectedSubject: 'Fiqih & Ushul Fiqih',
-
-    saveGrades() {
-        $store.sim.addToast('Nilai Disimpan', 'Seluruh entri nilai tugas dan ujian berhasil diperbarui.', 'success');
-    }
-}">
-
-    <!-- SELECTOR -->
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
-        <div class="flex flex-wrap items-center gap-3">
-            <div>
-                <span class="text-slate-500 font-semibold mr-1">Rombel:</span>
-                <select x-model="selectedClass" class="py-1 px-3 border border-slate-200 rounded-lg bg-slate-50 font-bold">
-                    <option value="Kelas VII-A (Putra)">Kelas VII-A (Putra)</option>
-                    <option value="Kelas VII-B (Putri)">Kelas VII-B (Putri)</option>
-                    <option value="Kelas VIII-A (Putra)">Kelas VIII-A (Putra)</option>
-                </select>
-            </div>
-            <div>
-                <span class="text-slate-500 font-semibold mr-1">Mata Pelajaran:</span>
-                <select x-model="selectedSubject" class="py-1 px-3 border border-slate-200 rounded-lg bg-slate-50 font-bold">
-                    <option value="Fiqih & Ushul Fiqih">Fiqih & Ushul Fiqih (KKM: 75)</option>
-                    <option value="Bahasa Arab & Nahwu">Bahasa Arab & Nahwu (KKM: 75)</option>
-                    <option value="Matematika Umum">Matematika Umum (KKM: 70)</option>
-                </select>
+<section class="section">
+    <!-- Filter Card -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-center">
+                <div class="col-12 col-md-6">
+                    <label class="form-label text-xs fw-bold text-muted text-uppercase mb-1">Rombel Kelas</label>
+                    <select class="form-select form-select-sm" id="selectClassGrades" onchange="filterClass(this.value)">
+                        <option value="">Semua Kelas</option>
+                        @foreach($classes as $c)
+                            <option value="{{ $c['name'] }}">{{ $c['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label class="form-label text-xs fw-bold text-muted text-uppercase mb-1">Mata Pelajaran (KKM)</label>
+                    <select class="form-select form-select-sm">
+                        <option value="Fiqih">Fiqih & Ushul Fiqih (KKM: 75)</option>
+                        <option value="Arab">Bahasa Arab & Nahwu (KKM: 75)</option>
+                        <option value="Matematika">Matematika Umum (KKM: 70)</option>
+                    </select>
+                </div>
             </div>
         </div>
-
-        <button type="button" @click="saveGrades()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-2xs">
-            Simpan Perubahan Nilai
-        </button>
     </div>
 
-    <!-- TABLE LEGER -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse text-xs">
+    <!-- Voler Datatable Card -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">Leger Nilai Santri</h4>
+            <span class="badge bg-light-primary text-primary">{{ count($students) }} Santri</span>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped" id="tableGrades">
                 <thead>
-                    <tr class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100 uppercase tracking-wider">
-                        <th class="py-3 px-4">Santri</th>
-                        <th class="py-3 px-4">NIS</th>
-                        <th class="py-3 px-4 text-center">Tugas & Kuis (20%)</th>
-                        <th class="py-3 px-4 text-center">Ulangan Harian (20%)</th>
-                        <th class="py-3 px-4 text-center">PTS (30%)</th>
-                        <th class="py-3 px-4 text-center">PAS (30%)</th>
-                        <th class="py-3 px-4 text-center">Nilai Akhir</th>
-                        <th class="py-3 px-4 text-center">Predikat</th>
+                    <tr>
+                        <th>NAMA SANTRI</th>
+                        <th>NIS & KELAS</th>
+                        <th class="text-center">TUGAS (20%)</th>
+                        <th class="text-center">UH (20%)</th>
+                        <th class="text-center">PTS (30%)</th>
+                        <th class="text-center">PAS (30%)</th>
+                        <th class="text-center">NILAI AKHIR</th>
+                        <th class="text-center">PREDIKAT</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
-                    <template x-for="st in $store.sim.students.slice(0, 10)" :key="st.id">
-                        <tr class="hover:bg-slate-50/60 transition-colors">
-                            <td class="py-3 px-4 font-bold text-slate-800" x-text="st.name"></td>
-                            <td class="py-3 px-4 font-mono text-slate-500" x-text="st.nis"></td>
-                            <td class="py-3 px-4 text-center font-bold text-slate-700">88</td>
-                            <td class="py-3 px-4 text-center font-bold text-slate-700">85</td>
-                            <td class="py-3 px-4 text-center font-bold text-slate-700">86</td>
-                            <td class="py-3 px-4 text-center font-bold text-slate-700">90</td>
-                            <td class="py-3 px-4 text-center font-black text-primary-900 bg-primary-50/40">87.5</td>
-                            <td class="py-3 px-4 text-center">
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">A (Sangat Baik)</span>
-                            </td>
-                        </tr>
-                    </template>
+                <tbody>
+                    @foreach($students as $index => $st)
+                    @php
+                        $tugas = 80 + ($index % 15);
+                        $uh = 78 + ($index % 18);
+                        $pts = 82 + ($index % 14);
+                        $pas = 85 + ($index % 12);
+                        $na = round(($tugas * 0.2) + ($uh * 0.2) + ($pts * 0.3) + ($pas * 0.3), 1);
+                        $predikat = $na >= 85 ? 'A (Sangat Baik)' : ($na >= 75 ? 'B (Baik)' : 'C (Cukup)');
+                        $badgeClass = $na >= 85 ? 'bg-success' : ($na >= 75 ? 'bg-info' : 'bg-warning');
+                    @endphp
+                    <tr>
+                        <td>
+                            <div class="fw-bold text-dark">{{ $st['name'] }}</div>
+                            <small class="text-muted">{{ $st['gender'] === 'L' ? 'Putra' : 'Putri' }}</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark font-monospace fw-bold">{{ $st['nis'] }}</span>
+                            <small class="text-muted d-block">{{ $st['class'] }}</small>
+                        </td>
+                        <td class="text-center fw-bold">{{ $tugas }}</td>
+                        <td class="text-center fw-bold">{{ $uh }}</td>
+                        <td class="text-center fw-bold">{{ $pts }}</td>
+                        <td class="text-center fw-bold">{{ $pas }}</td>
+                        <td class="text-center fw-bold text-primary">{{ $na }}</td>
+                        <td class="text-center">
+                            <span class="badge {{ $badgeClass }}">{{ $predikat }}</span>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
-
-</div>
+</section>
 @endsection
+
+@push('scripts')
+<script>
+    let dtGrades;
+    document.addEventListener('DOMContentLoaded', function () {
+        let table = document.querySelector('#tableGrades');
+        if (table && typeof simpleDatatables !== 'undefined') {
+            dtGrades = new simpleDatatables.DataTable(table, {
+                searchable: true,
+                fixedHeight: false,
+                perPage: 10,
+                perPageSelect: [10, 20, 50],
+                labels: {
+                    placeholder: "Cari nama santri, NIS, kelas...",
+                    perPage: "{select} entri per halaman",
+                    noRows: "Tidak ada data nilai ditemukan",
+                    info: "Menampilkan {start} sampai {end} dari {rows} santri"
+                }
+            });
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        }
+    });
+
+    function filterClass(val) {
+        if (dtGrades) {
+            dtGrades.search(val);
+        }
+    }
+</script>
+@endpush
