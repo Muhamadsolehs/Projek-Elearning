@@ -1,15 +1,17 @@
 <div id="sidebar" class="active">
     <div class="sidebar-wrapper active">
         <!-- Sidebar Brand Header -->
-        <div class="sidebar-header d-flex justify-content-between align-items-center">
-            <a href="{{ route('dashboard.super-admin') }}" class="d-flex align-items-center gap-2 text-decoration-none">
-                <img src="{{ asset('assets/images/logo.svg') }}" alt="Logo SIM Pesantren" style="height: 34px;">
-                <div>
-                    <h5 class="mb-0 fw-bold" style="color: #1E3A5F; font-size: 15px; letter-spacing: -0.3px;">SIM PESANTREN</h5>
-                    <small class="text-muted" style="font-size: 11px;">Al-Hikmah Terpadu</small>
-                </div>
-            </a>
-            <a href="#" class="sidebar-toggler btn x"><i data-feather="x"></i></a>
+        <div class="sidebar-header" style="padding: 1.5rem 1.25rem 1rem;">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="{{ route('dashboard.super-admin') }}" class="d-flex align-items-center gap-3 text-decoration-none">
+                    <img src="{{ asset('assets/images/favicon.svg') }}" alt="Logo SIM Pesantren" style="height: 36px; width: 36px; flex-shrink: 0;">
+                    <div class="d-flex flex-column justify-content-center" style="line-height: 1.25;">
+                        <span class="fw-bold text-nowrap" style="color: #1E3A5F; font-size: 15px; letter-spacing: -0.2px;">SIM PESANTREN</span>
+                        <small class="text-muted text-nowrap" style="font-size: 11px;">Al-Hikmah Terpadu</small>
+                    </div>
+                </a>
+                <a href="#" class="sidebar-toggler btn x"><i data-feather="x"></i></a>
+            </div>
         </div>
 
         <!-- Role Indicator Pill -->

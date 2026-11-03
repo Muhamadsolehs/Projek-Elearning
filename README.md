@@ -91,3 +91,4 @@ Pada halaman masuk (`/login`), tersedia tombol **Akses Cepat Demo** untuk berali
 
 ## 📄 Lisensi
 Hak Cipta © 2026 SIM-Pesantren Terintegrasi (Smartren). Dilindungi undang-undang.
+
