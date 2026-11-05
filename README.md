@@ -1,94 +1,69 @@
-# Smartren — Sistem Informasi Manajemen Pesantren Terintegrasi
+# EduCore — Integrated E-Learning & Computer Based Test Platform
 
-Aplikasi Enterprise Resource Planning (ERP) dan School Management System modern berbasis web untuk mengelola seluruh ekosistem administrasi, akademik, perizinan asrama, keuangan, perpustakaan, dan kesiswaan pesantren dalam satu platform terintegrasi.
-
----
-
-## 🚀 Fitur Utama & 11 Hak Akses Pengguna (RBAC)
-
-Aplikasi dilengkapi dengan kontrol akses berbasis peran (*Role-Based Access Control*) dengan navigasi dan dasbor terpisah untuk **11 Role**:
-
-1. **Super Admin**: Monitoring eksekutif, manajemen akun pengguna, konfigurasi hak akses, dan audit trail log.
-2. **Administrator Pesantren**: Master data santri 360°, wali santri, pendidik, rombel kelas, dan kamar asrama.
-3. **Admin Penerimaan Santri Baru (PSB)**: Pipeline seleksi (Pendaftaran → Berkas → Tes → Kelulusan → Aktivasi NIS & Akun).
-4. **Admin Akademik**: Tahun ajaran, semester, kurikulum mapel, jadwal KBM, dan kalender pendidikan.
-5. **Guru / Ustadz**: Jadwal mengajar mingguan, presensi harian kelas (*Tandai Semua Hadir*), dan input nilai formatif/sumatif.
-6. **Wali Kelas**: Rekap absensi santri kelas, rekap capaian nilai rapor, dan pantauan catatan pembinaan santri.
-7. **Admin Keasramaan / Pengasuh**: Jadwal halaqah/tahfidz, presensi asrama, pos satpam/gate check keluar-masuk dengan scanner QR Code.
-8. **Bendahara / Keuangan**: Pos tarif biaya, generate tagihan massal, verifikasi pembayaran, dan cetak kuitansi resmi (A5).
-9. **Petugas Perpustakaan**: Katalog buku, inventaris eksemplar, generator cetak label barcode & QR Code lembar A4 (Grid 3x7), serta sirkulasi pinjam-kembali.
-10. **Portal Santri**: Kartu Tanda Santri (KTS) digital QR, cek jadwal pelajaran, presensi, dan histori nilai.
-11. **Portal Wali Santri**: Pantauan perkembangan anak, izin keluar santri, status pembayaran SPP, dan mutasi tabungan santri.
+Platform terintegrasi Pembelajaran Daring (*E-Learning*) dan Ujian Berbasis Komputer (*Computer Based Test* / CBT) modern dengan antarmuka presisi (*pixel-perfect*), sistem multi-tenant, dan otorisasi berbasis peran (Role-Based Access Control / RBAC).
 
 ---
 
-## 🛠️ Arsitektur & Teknologi
+## 🚀 Fitur Utama
 
-- **Backend**: Laravel 11 (PHP 8.2+)
-- **UI Framework & Template**: Bootstrap 5.2 (Voler Admin Dashboard)
-- **Local Template Assets**:
-  - CSS: `assets/css/bootstrap.css`, `assets/css/app.css`
-  - Ikon: Feather Icons (`assets/js/feather-icons/feather.min.js`)
-  - Grafik: Chart.js & ApexCharts (`assets/vendors/`)
-  - Datatables: Simple DataTables (`assets/vendors/simple-datatables/`)
-  - Scrollbar: Perfect Scrollbar (`assets/vendors/perfect-scrollbar/`)
-- **Database**: SQLite (dapat dialihkan ke MySQL / PostgreSQL via `.env`)
-- **Standar Bahasa & Format**: Bahasa Indonesia, format tanggal `DD MMMM YYYY`
+### 1. Dashboard Interaktif (4 Role RBAC)
+- **Siswa**: Dashboard responsif dengan reproduksi visual presisi (*pixel-perfect*), kartu statistik capaian, banner sambutan, daftar kelas aktif, hitung mundur ujian CBT, widget jadwal & kalender bulanan, widget tugas mendesak, serta pemantau progres belajar lingkaran (*circular ring*).
+- **Guru**: Manajemen kelas, antrean koreksi tugas siswa, penjadwalan butir CBT, monitoring pengawasan ujian *real-time*, dan koreksi esai dengan rubrik terstandar.
+- **Admin Institusi**: Manajemen data akademik (Tahun Ajaran, Rombel/Kelas, Mata Pelajaran), statistik siswa & guru, import data massal via Excel, serta pemantau infrastruktur server CBT.
+- **Super Admin**: Hub multi-tenant platform, verifikasi pendaftaran sekolah/kampus baru, pemantau kesehatan cluster server (*uptime 99.98%*), dan audit log aktivitas sistem.
 
----
+### 2. Modul E-Learning Komprehensif
+- **Materi & Silabus**: Struktur bab dan topik terorganisir dengan estimasi waktu belajar, materi teks/multimedia, dan pelacakan status selesai.
+- **Tugas & Praktikum**: Filter status pengumpulan (Belum Selesai, Menunggu Nilai, Dinilai), modal pengunggahan berkas tugas (PDF/DOCX/ZIP), dan catatan feedback dari guru.
+- **Forum Diskusi**: Ruang kolaborasi tanya-jawab interaktif antar siswa dan guru dengan penanda topik disematkan (*pinned topic*).
 
-## 📦 Panduan Instalasi Lokal
-
-### 1. Klon Repositori
-```bash
-git clone https://github.com/Muhamadsolehs/Projek-SmartrenWebsite.git
-cd Projek-SmartrenWebsite
-```
-
-### 2. Pasang Ketergantungan Composer
-```bash
-composer install
-```
-
-### 3. Konfigurasi Lingkungan (`.env`)
-Salin berkas contoh konfigurasi:
-```bash
-cp .env.example .env
-php artisan key:generate
-```
-
-Pastikan konfigurasi database di `.env` telah sesuai (secara bawaan menggunakan SQLite):
-```env
-DB_CONNECTION=sqlite
-```
-*Jika menggunakan SQLite, pastikan berkas `database/database.sqlite` telah dibuat:*
-```bash
-touch database/database.sqlite
-```
-
-### 4. Menjalankan Aplikasi
-
-- **Opsi A — Menggunakan Laragon (Direkomendasikan):**
-  1. Letakkan folder proyek di `C:\laragon\www\TA` atau `D:\laragon\www\TA`.
-  2. Klik tombol **Start All** pada aplikasi Laragon.
-  3. Buka browser: `http://localhost/TA/` atau `http://TA.test`.
-
-- **Opsi B — Menggunakan Laravel Built-in Server:**
-  ```bash
-  php artisan serve
-  ```
-  Buka browser pada alamat `http://127.0.0.1:8000`.
+### 3. Modul CBT (Computer Based Test) Terstandar
+- **Question Builder Multi-format**: Mendukung Pilihan Ganda Tunggal, Pilihan Ganda Kompleks, Benar/Salah, Isian Singkat, Menjodohkan, dan Uraian/Esai lengkap dengan bobot skor dan pembahasan.
+- **Ruang Pengerjaan Ujian (*Distraction-Free*)**:
+  - Timer hitung mundur berbasis server dengan penanda visual.
+  - Palet navigasi nomor soal dengan 4 status warna: Belum Dijawab (abu-abu), Sudah Dijawab (hijau), Ragu-ragu (kuning), dan Sedang Dibuka (ring biru).
+  - Indikator penyimpanan otomatis (*autosave status*) *real-time*.
+  - Dialog konfirmasi submit dengan rekapitulasi butir terisi.
+- **Live Monitoring & Proctoring**: Tabel pengawasan peserta ujian aktif (*real-time status*, durasi, indikator pelanggaran pindah tab, buka kunci, dan submit paksa).
+- **Koreksi Esai & Rekap Nilai**: Penilaian esai manual guru dengan skor parsial dan umpan balik personal.
 
 ---
 
-## 🔑 Akun & Akses Cepat Demo
+## 🛠️ Teknologi yang Digunakan
 
-Pada halaman masuk (`/login`), tersedia tombol **Akses Cepat Demo** untuk beralih instan ke 11 role tanpa perlu mengetik kredensial satu per satu:
-- **Username Default**: `admin@pesantren.sch.id`
-- **Password Default**: `password123`
+- **Framework**: [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool**: [Vite 5](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS 3](https://tailwindcss.com/)
+- **Ikon Antarmuka**: [Lucide Icons](https://lucide.dev/)
+- **Routing**: [React Router v6](https://reactrouter.com/)
+- **Typography**: Plus Jakarta Sans & Inter
+
+---
+
+## 📦 Panduan Instalasi & Menjalankan Aplikasi
+
+Pastikan Node.js (versi 18+) telah terpasang di perangkat Anda.
+
+```bash
+# 1. Clone repositori
+git clone https://github.com/Muhamadsolehs/Projek-Elearning.git
+cd Projek-Elearning
+
+# 2. Pasang dependensi
+npm install
+
+# 3. Jalankan development server
+npm run dev
+
+# 4. Bangun versi produksi teroptimasi
+npm run build
+npm run preview
+```
+
+Buka URL **`http://localhost:3000`** di browser Anda. Gunakan menu dropdown profil di pojok kanan atas untuk mengganti tampilan peran (*role switcher*) secara langsung.
 
 ---
 
 ## 📄 Lisensi
-Hak Cipta © 2026 SIM-Pesantren Terintegrasi (Smartren). Dilindungi undang-undang.
 
+Hak Cipta © 2026 EduCore Platform. Seluruh hak cipta dilindungi undang-undang.
